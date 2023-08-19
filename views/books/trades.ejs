@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <title>All books</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+</head>
+<body>
+  <% include ../components/navbar.ejs %>
+  <div class="container panel panel-default">
+
+
+
+
+    <div class="panel-body">
+        <% if (typeof pending !== 'undefined' && pending.length > 0) {%>
+          <h2>Pending requests</h2>
+          <div class="row">
+            <% for(var i = 0; i < pending.length; i++) {%>
+              <div class="col-md-3">
+                <div class="panel panel-primary">
+                  <div class="panel-body text-center">
+                    <img src="<%= pending[i].imgUrl %>" alt="<%= pending[i].title %>">
+                  </div>
+                  <div class="panel-footer text-center">
+                    <p>
+                      <%= pending[i].title %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        <% } %>
+    </div>
+  </div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>

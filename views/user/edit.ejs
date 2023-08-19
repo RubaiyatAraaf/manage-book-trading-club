@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+</head>
+<body>
+  <% include ../components/navbar.ejs %>
+  <div class="container panel panel-default">
+    <div class="panel-body">
+      <form class=" col-md-10  col-md-offset-1" method="post">
+        <input type="hidden" name="_csrf" value="<%= csrftoken %>" />
+        <div class="clearfix"></div>
+
+        <div class="form-group">
+          <label for="name" class="control-label">Name <span style="color:red;">*</span></label>
+          <input type="text"
+                 name="name"
+                 value="<%= user.profile.name %>"
+                 class="form-control"
+                 required>
+        </div>
+
+        <div class="form-group">
+          <label for="city" class="control-label">City <span style="color:red;">*</span></label>
+          <input type="text"
+                 name="city"
+                 value="<%= user.profile.city %>"
+                 class="form-control"
+                 required>
+        </div>
+
+        <div class="form-group">
+          <label for="state" class="control-label">State <span style="color:red;">*</span></label>
+          <input type="text"
+                 name="state"
+                 value="<%= user.profile.state %>"
+                 class="form-control"
+                 required>
+        </div>
+
+        <div class="form-group">
+          <label for="state" class="control-label">
+            Profile picture URL
+            (<a href='<%= user.profile.pictureUrl %>' target="_blank">preview</a>)
+            <span style="color:red;">*</span>
+          </label>
+          <input type="text"
+                 name="pictureUrl"
+                 value="<%= user.profile.pictureUrl %>"
+                 class="form-control"
+                 required>
+        </div>
+        <div class="row">
+              <div class="well">
+                  <h3><span class="fa fa-user"></span> Local</h3>
+
+                  <% if (user.local.email) { %>
+                      <p>
+                          <strong>id</strong>: <%= user._id %><br>
+                          <strong>email</strong>: <%= user.local.email %><br>
+                      </p>
+
+                      <a href="/unlink/local" class="btn btn-default">Unlink</a>
+                  <% } else { %>
+                      <a href="/connect/local" class="btn btn-default">Connect Local</a>
+                  <% } %>
+
+              </div>
+
+          <!-- FACEBOOK INFORMATION -->
+              <div class="well">
+                  <h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
+
+                  <!-- check if the user has this token (is the user authenticated with this social account) -->
+                  <% if (user.facebook.token) { %>
+                      <p>
+                          <strong>id</strong>: <%= user.facebook.id %><br>
+                          <strong>email</strong>: <%= user.facebook.email %><br>
+                      </p>
+
+                      <a href="/unlink/facebook" class="btn btn-primary">Unlink</a>
+                  <% } else { %>
+                      <a href="/connect/facebook" class="btn btn-primary">Connect Facebook</a>
+                  <% } %>
+
+              </div>
+
+          <!-- TWITTER INFORMATION -->
+              <div class="well">
+                  <h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
+
+                  <!-- check if the user has this token (is the user authenticated with this social account) -->
+                  <% if (user.twitter.token) { %>
+                      <p>
+                          <strong>id</strong>: <%= user.twitter.id %><br>
+                          <strong>username</strong>: <%= user.twitter.username %>
+                      </p>
+                      <a href="/unlink/twitter" class="btn btn-info">Unlink</a>
+                  <% } else { %>
+                      <a href="/connect/twitter" class="btn btn-info">Connect Twitter</a>
+                  <% } %>
+
+              </div>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

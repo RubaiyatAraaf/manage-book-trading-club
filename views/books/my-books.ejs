@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+    <title>My books</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+</head>
+<body>
+  <% include ../components/navbar.ejs %>
+  <div class="container panel panel-default">
+    <div class="panel-body">
+      <h2>Your trade requests</h2>
+      <% if (typeof books !== 'undefined' && books.length > 0) {%>
+        <table class="table">
+          <thead>
+            <th>Book</th>
+            <th>Requester</th>
+            <th>Actions</th>
+          </thead>
+          <tbody>
+          <% for(var i = 0; i < books.length; i++) {%>
+            <% for(var j = 0; j < books[i].requesters.length; j++) {%>
+              <tr>
+              <td><%= books[i].title %></td>
+              <td>
+                <a href='/users/profile/<%= books[i].requesters[j]%>'>
+                    <%= books[i].requesters[j] %>
+                  </a>
+              </td>
+              <td>
+              <a role="button"
+                 class="btn btn-success <% if (books[i].isFree()) {%> ' disabled '<%}%>"
+                 href='<%= "/books/give/" + books[i].id + "/to/" + books[i].requesters[j] %>'>Accpet</a>
+              </td>
+              </tr>
+            <%}%>
+
+          <%}%>
+          </tbody>
+          </table>
+      <%}%>
+
+      <hr>
+      <h2>Add book</h2>
+      <form method="post" class="col-sm-6">
+        <input type="hidden" name="_csrf" value="<%= csrftoken %>" />
+
+        <div class="form-group">
+          <label>Book title</label>
+          <input type="text" name="title" placeholder="New book title" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label>Book image</label>
+          <input type="text" name="image" placeholder="New book image" class="form-control">
+        </div>
+
+        <div class="text-center">
+          <button type="submit" class="btn btn-success">Add</button>
+        </div>
+
+      </form>
+
+      <div class="col-sm-6">
+        <img src="https://placeimg.com/640/480/tech" alt="" id="book-cover" width="260">
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    var serverCall;
+    var csrfToken = $('input[name="_csrf"]').val();
+    $('input[name="title"]').on('keyup', function(){
+      clearTimeout(serverCall);
+      var title = $(this).val();
+      serverCall = setTimeout(function(){
+        console.log("calling");
+        $.get('https://www.googleapis.com/books/v1/volumes?q=title:' + title, function(data){
+          if (data ) {
+            console.log(data.items[0]);
+            if (typeof data.items[0].volumeInfo.imageLinks !== 'undefined') {
+              var imgUrl = data.items[0].volumeInfo.imageLinks.thumbnail;
+              $('input[name="image"]').val(imgUrl);
+              return $('#book-cover').attr('src', imgUrl);
+            }
+          }
+          $('input[name="image"]').val("");
+          return $('#book-cover').attr('src', 'http://warnerwirelessusa.com/wp-content/uploads/2015/03/image-not-available-master.jpg');
+        });
+      },2000);
+    });
+  </script>
+</body>
+</html>
